@@ -1,4 +1,10 @@
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+import os
+from dotenv import load_dotenv
 import requests
+
+load_dotenv()
 
 class Extract():
     def __init__(self):
@@ -11,3 +17,16 @@ class Extract():
         data = resp.json()
 
         return data
+
+    
+    def extract_collection_from_mongo(self, db_name, collection_name):
+            mongo_uri = os.getenv("MONGO_URI")
+            client = MongoClient(mongo_uri, server_api=ServerApi('1'))
+
+            db = client[db_name]
+            data = db[collection_name]
+
+            data = list(data.find())
+            return data
+
+
